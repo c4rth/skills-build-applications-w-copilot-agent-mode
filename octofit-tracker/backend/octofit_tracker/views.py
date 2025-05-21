@@ -10,7 +10,15 @@ from .models import User, Team, Activity, Leaderboard, Workout
 def api_root(request, format=None):
     if request.method == 'POST':
         return Response({"message": "POST request received"}, status=status.HTTP_201_CREATED)
-    base_url = 'http://[REPLACE-THIS-WITH-YOUR-CODESPACE-NAME]-8000.app.github.dev/'
+    # Use the Codespace URL for Codespace, and localhost for local development
+    import os
+    codespace_url = 'https://legendary-space-engine-wr74vp49xq2x6x-8000.app.github.dev/'
+    localhost_url = 'http://localhost:8000/'
+    # Detect if running in Codespaces by checking environment variable
+    if 'CODESPACES' in os.environ or os.environ.get('GITHUB_CODESPACE_NAME'):
+        base_url = codespace_url
+    else:
+        base_url = localhost_url
     return Response({
         'users': base_url + 'api/users/?format=api',
         'teams': base_url + 'api/teams/?format=api',
